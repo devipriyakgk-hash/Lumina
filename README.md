@@ -4,9 +4,7 @@
 
 A static website checker for **accessibility**. Paste a URL or some HTML → get a score out of 100 and a color-coded list of issues, in plain language — including what a screen reader might say.
 
-Built by **Devipriya G.**
-
-**Live prototype:** [https://devipriyakgk-hash.github.io/Lumina/](https://devipriyakgk-hash.github.io/Lumina/)
+[View the live interactive prototype →](https://devipriyakgk-hash.github.io/Lumina/)
 
 ---
 
