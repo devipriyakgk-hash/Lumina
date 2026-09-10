@@ -15,7 +15,7 @@ from src.fetcher import fetch_html
 from src.present import to_report
 from src.sample_html import BROKEN_HTML
 
-app = Flask(__name__, static_folder="public", static_url_path="")
+app = Flask(__name__, static_folder="docs", static_url_path="")
 
 
 @app.get("/")

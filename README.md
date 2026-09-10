@@ -6,6 +6,8 @@ A static website checker for **accessibility**. Paste a URL or some HTML → get
 
 Built by **Devipriya G.**
 
+**Live prototype:** [https://devipriyakgk-hash.github.io/Lumina/](https://devipriyakgk-hash.github.io/Lumina/)
+
 ---
 
 ## What is this, in easy words?
@@ -65,7 +67,7 @@ pip install -r requirements.txt
 python app.py
 ```
 
-Open **http://localhost:3000**
+Open **http://localhost:3000** — same interactive prototype as the live site.
 
 1. Click **Try a demo page with mistakes**
 2. Open an issue, then click **Hear it**

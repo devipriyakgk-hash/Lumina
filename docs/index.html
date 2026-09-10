@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lumina — find problems people might not see</title>
+    <meta
+      name="description"
+      content="Paste a URL or HTML. Lumina checks alt text, labels, headings, language, titles, blank buttons, and duplicate IDs — then scores the page."
+    />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,360;0,9..144,520;0,9..144,600;1,9..144,360;1,9..144,500&family=Outfit:wght@330;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Lumina home">
+        <svg class="mark" viewBox="0 0 32 32" width="28" height="28" aria-hidden="true">
+          <circle cx="16" cy="16" r="14.2" fill="none" stroke="currentColor" stroke-width="1.2" />
+          <circle cx="16" cy="16" r="5.2" fill="none" stroke="currentColor" stroke-width="1.2" />
+          <path
+            d="M16 2.2 L18.4 10.2 L16 16 L13.6 10.2 Z M29.8 16 L21.8 18.4 L16 16 L21.8 13.6 Z M16 29.8 L13.6 21.8 L16 16 L18.4 21.8 Z M2.2 16 L10.2 13.6 L16 16 L10.2 18.4 Z"
+            fill="currentColor"
+            opacity="0.9"
+          />
+        </svg>
+        <span class="brand-name">Lumina</span>
+      </a>
+      <p class="brand-aside">Website checker</p>
+    </header>
+
+    <main id="main">
+      <section id="landing" class="landing" data-panel>
+        <p class="eyebrow">Static HTML checks · explained in plain language</p>
+        <h1>
+          Find problems people<br />
+          <em>might not see.</em>
+        </h1>
+        <p class="lede">
+          Paste a website link or some HTML. Lumina looks for missing picture text, unlabeled
+          forms, skipped headings, blank buttons, and more — then gives a score out of 100.
+        </p>
+
+        <div class="mode" role="tablist" aria-label="How do you want to check?">
+          <button type="button" class="mode-btn" role="tab" aria-selected="true" data-mode="url" id="tab-url">
+            Website link
+          </button>
+          <button type="button" class="mode-btn" role="tab" aria-selected="false" data-mode="html" id="tab-html">
+            Paste HTML
+          </button>
+        </div>
+
+        <form id="audit-form" class="audit-form" autocomplete="off">
+          <div id="url-mode">
+            <label class="sr-only" for="url">Website URL</label>
+            <div class="url-shell">
+              <span class="url-prefix" aria-hidden="true">https://</span>
+              <input
+                id="url"
+                name="url"
+                type="url"
+                inputmode="url"
+                spellcheck="false"
+                placeholder="your-site.com"
+              />
+              <button type="submit" class="go" id="audit-btn">
+                <span>Check</span>
+                <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+                  <path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div id="html-mode" hidden>
+            <label class="sr-only" for="html">HTML to check</label>
+            <textarea id="html" name="html" rows="10" placeholder="Paste HTML here…" spellcheck="false"></textarea>
+            <div class="html-actions">
+              <button type="button" class="ghost" id="load-snippet">Load a tiny broken snippet</button>
+              <button type="submit" class="go">
+                <span>Check HTML</span>
+              </button>
+            </div>
+          </div>
+
+          <p id="form-error" class="form-error" role="alert" hidden></p>
+        </form>
+
+        <div class="starters">
+          <button type="button" class="chip" data-sample>Try a demo page with mistakes</button>
+          <button type="button" class="chip" data-url="https://example.com">example.com</button>
+          <button type="button" class="chip" data-url="https://en.wikipedia.org/wiki/Web_accessibility">Wikipedia</button>
+        </div>
+
+        <aside class="glossary" aria-label="Simple meanings">
+          <h2>New to this? Quick meanings</h2>
+          <dl>
+            <div>
+              <dt>Accessibility</dt>
+              <dd>Making a site usable for everyone — including people who use a keyboard or a screen reader.</dd>
+            </div>
+            <div>
+              <dt>Alt text</dt>
+              <dd>A short description of a picture, so someone who cannot see it still knows what it is.</dd>
+            </div>
+            <div>
+              <dt>Screen reader</dt>
+              <dd>Software that speaks the page out loud. It can only say what the HTML actually names.</dd>
+            </div>
+            <div>
+              <dt>Label</dt>
+              <dd>A name for a button or input. Without it, assistive tech cannot say what the control does.</dd>
+            </div>
+          </dl>
+        </aside>
+      </section>
+
+      <section id="scanning" class="scanning" data-panel hidden>
+        <div class="scan-orb" aria-hidden="true"></div>
+        <h2 class="scan-title">Reading the HTML…</h2>
+        <p class="scan-url" id="scan-url"></p>
+        <ol class="scan-steps" id="scan-steps" aria-live="polite">
+          <li data-step="0">Looking at pictures and alt text</li>
+          <li data-step="1">Checking forms, buttons, and links</li>
+          <li data-step="2">Walking the heading outline</li>
+          <li data-step="3">Scoring and writing the report</li>
+        </ol>
+      </section>
+
+      <section id="report" class="report" data-panel hidden>
+        <div class="report-toolbar">
+          <button type="button" class="ghost" id="new-audit">
+            <svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true">
+              <path d="M15 18l-6-6 6-6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            New check
+          </button>
+          <div class="toolbar-actions">
+            <button type="button" class="ghost" id="print-btn">Print</button>
+            <button type="button" class="ghost" id="json-btn">Download JSON</button>
+          </div>
+        </div>
+
+        <header class="scoreboard">
+          <div class="score-block">
+            <div class="ring-wrap">
+              <svg class="ring" viewBox="0 0 120 120" aria-hidden="true">
+                <circle class="ring-track" cx="60" cy="60" r="52" />
+                <circle class="ring-value" cx="60" cy="60" r="52" id="ring-value" />
+              </svg>
+              <div class="score-num">
+                <span id="score-value">0</span>
+                <small>/100</small>
+              </div>
+            </div>
+            <div class="score-copy">
+              <p class="grade" id="grade-label">Needs work</p>
+              <h2 id="page-title">Untitled</h2>
+              <p class="page-url" id="page-url"></p>
+              <p class="score-meta" id="score-meta"></p>
+            </div>
+          </div>
+
+          <aside class="limits">
+            <h3>What this score cannot see</h3>
+            <ul>
+              <li>Color contrast (needs a real browser)</li>
+              <li>Keyboard tab order</li>
+              <li>A live screen-reader walkthrough</li>
+            </ul>
+            <p>Good first pass. Not a certificate.</p>
+          </aside>
+        </header>
+
+        <ul class="impact-row" id="impact-row"></ul>
+
+        <section class="inventory" aria-label="Page inventory">
+          <article>
+            <h3>Document</h3>
+            <dl id="doc-facts"></dl>
+          </article>
+          <article>
+            <h3>Heading outline</h3>
+            <ol class="outline" id="heading-outline"></ol>
+          </article>
+          <article class="span-2">
+            <h3>Image inventory</h3>
+            <div class="img-grid" id="img-grid"></div>
+          </article>
+        </section>
+
+        <section class="issues" aria-labelledby="issues-heading">
+          <div class="issues-head">
+            <h3 id="issues-heading">Issues</h3>
+            <div class="filters" role="tablist" aria-label="Filter issues" id="filters"></div>
+          </div>
+          <div id="issue-list" class="issue-list"></div>
+        </section>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <p>
+        <strong>Lumina</strong> reads HTML only — it does not open a full browser.
+        Built by Devipriya G.
+      </p>
+    </footer>
+
+    <script src="engine.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
