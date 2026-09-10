@@ -2,7 +2,7 @@
 
 **Find problems people might not see.**
 
-A static website checker for **accessibility** — paste a URL or some HTML, get a score out of 100, and a color-coded list of real issues, explained in plain language (including what a screen reader might say).
+A static website checker for **accessibility**. Paste a URL or some HTML → get a score out of 100 and a color-coded list of issues, in plain language — including what a screen reader might say.
 
 Built by **Devipriya G.**
 
@@ -12,39 +12,49 @@ Built by **Devipriya G.**
 
 **Accessibility** means: *can everyone use this website?*
 
-That includes people who:
-
-- cannot see the screen well (they may use a **screen reader** — software that *speaks* the page)
-- use a **keyboard** instead of a mouse
-- find unclear buttons or unlabeled forms confusing
-
-Lumina does a **first pass**. It reads the HTML (the page’s structure) and looks for common mistakes.
+Lumina does a **first pass**. It reads the HTML (the page’s structure) and looks for common mistakes. It does **not** open a full browser.
 
 ### What it checks
 
 | Check | Easy meaning |
 | --- | --- |
-| **Alt text** | A picture with no description. The screen reader doesn’t know what it is. |
-| **Form labels** | An input box with no name. The user hears “edit text”, not “email”. |
-| **Heading order** | Jumping from `h1` to `h4`. The page outline is broken. |
-| **Page language** | Missing `lang` on `<html>`. The wrong voice / pronunciation may be used. |
-| **Page title** | Missing `<title>`. Often the first thing announced on load. |
-| **Blank links / buttons** | A control with no words. Announced as just “link” or “button”. |
-| **Duplicate IDs** | The same `id` twice. Labels and jump-links can point at the wrong thing. |
+| **Alt text** | A picture with no description. |
+| **Form labels** | An input box with no name. |
+| **Heading order** | Jumping from `h1` to `h4`. |
+| **Page language** | Missing `lang` on `<html>`. |
+| **Page title** | Missing `<title>`. |
+| **Blank links / buttons** | A control with no words. |
+| **Duplicate IDs** | The same `id` twice. |
 
 ### What it honestly does **not** check
 
-These need a **real browser** or a **real screen reader**, not just HTML:
+These need a real browser or a real screen reader:
 
-- **Color contrast** (text vs background)
-- Keyboard tab order and focus rings
-- How a screen reader actually moves through the live page
+- Color contrast
+- Keyboard tab order
+- A live screen-reader walkthrough
 
-Passing every Lumina check is a **good sign**, not a certificate.
+Passing Lumina is a **good sign**, not a certificate.
 
 ---
 
-## Run the interactive prototype
+## How the code is split (hybrid)
+
+```
+src/auditor.py     ← the checker (your rules, no internet)
+src/fetcher.py     ← downloads a live URL
+src/present.py     ← UI extras only (“hear it”, outline, stats)
+src/sample_html.py ← demo page with planted mistakes
+app.py             ← small Flask server for the prototype
+public/            ← the interactive screen
+tests/             ← proves every check actually fires
+```
+
+`auditor.py` does not know about the website UI. You can test it with a string of HTML alone.
+
+---
+
+## Run the prototype
 
 You need [Python 3.10+](https://www.python.org/).
 
@@ -57,32 +67,12 @@ python app.py
 
 Open **http://localhost:3000**
 
-1. Click **Try a demo page with mistakes** — a pretty restaurant page that fails on purpose.
-2. Or paste any public URL.
-3. Or paste raw HTML (good for homework / local files).
-4. Click an issue, then **Hear it** to play what a screen reader might say.
+1. Click **Try a demo page with mistakes**
+2. Open an issue, then click **Hear it**
 
 ```bash
 python -m unittest tests/test_auditor.py
 ```
-
----
-
-## Project structure
-
-```
-lumina/
-├── src/
-│   ├── auditor.py      # checks HTML — no internet needed
-│   ├── fetcher.py      # downloads a live URL
-│   └── sample_html.py  # demo page with planted bugs
-├── public/             # interactive prototype (UI)
-├── tests/
-├── app.py              # small Flask server
-└── requirements.txt
-```
-
-The auditor has **zero network code**, so you can test it with a string of HTML alone.
 
 ---
 

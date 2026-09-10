@@ -1,12 +1,18 @@
 """
-Lumina — interactive prototype.
+Lumina — interactive prototype (UI only).
+
+The checks live in src/auditor.py.
+The download lives in src/fetcher.py.
+
 Run with:  python app.py
+Then open http://localhost:3000
 """
 
 from flask import Flask, jsonify, request, send_from_directory
 
 from src.auditor import audit_html
 from src.fetcher import fetch_html
+from src.present import to_report
 from src.sample_html import BROKEN_HTML
 
 app = Flask(__name__, static_folder="public", static_url_path="")
@@ -23,11 +29,9 @@ def api_audit():
     try:
         if body.get("sample"):
             result = audit_html(BROKEN_HTML)
-            payload = result.to_dict()
-            payload["ok"] = True
-            payload["source"] = "sample"
-            payload["label"] = "Demo page with planted mistakes"
-            return jsonify(payload)
+            return jsonify(
+                to_report(result, BROKEN_HTML, "Demo page with planted mistakes", "sample")
+            )
 
         html = body.get("html")
         url = (body.get("url") or "").strip()
@@ -36,29 +40,18 @@ def api_audit():
             if len(html) > 2_000_000:
                 return jsonify({"ok": False, "error": "That HTML is too large."}), 400
             result = audit_html(html)
-            payload = result.to_dict()
-            payload["ok"] = True
-            payload["source"] = "html"
-            payload["label"] = "Pasted HTML"
-            return jsonify(payload)
+            return jsonify(to_report(result, html, "Pasted HTML", "html"))
 
         if not url:
             return jsonify({"ok": False, "error": "Paste a URL, or some HTML."}), 400
-        if len(url) > 2048:
-            return jsonify({"ok": False, "error": "That URL is too long."}), 400
 
         fetched = fetch_html(url)
         result = audit_html(fetched)
-        payload = result.to_dict()
-        payload["ok"] = True
-        payload["source"] = "url"
-        payload["label"] = url if url.startswith("http") else "https://" + url
-        return jsonify(payload)
-    except ValueError as exc:
-        return jsonify({"ok": False, "error": str(exc)}), 400
+        label = url if url.startswith("http") else "https://" + url
+        return jsonify(to_report(result, fetched, label, "url"))
     except Exception as exc:
-        message = str(exc)
-        if "timeout" in message.lower():
+        raw = str(exc)
+        if "timeout" in raw.lower():
             message = "That page took too long to load. Try another URL, or paste the HTML."
         else:
             message = "Could not fetch that page. Try pasting the HTML instead."
