@@ -1,0 +1,17 @@
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.env
+.DS_Store
+.cache/
+.local/
+.npm/
+.pki/
+.config/
+*.log
+node_modules/
+.sudo_as_admin_successful
+qa-*.jpg
+qa-*.png
+uploads/

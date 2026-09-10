@@ -1,0 +1,1 @@
+"""Lumina — static accessibility checks."""
